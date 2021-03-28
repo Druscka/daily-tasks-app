@@ -1,0 +1,22 @@
+{
+    "tasks": [
+        {
+          "id": "1",
+          "text": "Car Service Appointment",
+          "day": "24th of February - 13:30",
+          "reminder": true
+        },
+        {
+          "id": "2",
+          "text": "Pick up Allan from Airport",
+          "day": "31st of March - 14:25",
+          "reminder": true
+        },
+        {
+          "id": "3",
+          "text": "Drinking session with the boys",
+          "day": "24th of June - 21:00",
+          "reminder": false
+        }
+      ]
+}

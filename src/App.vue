@@ -1,6 +1,10 @@
 <template>
   <div class="container">
-    <Header title="Daily Tasks" />
+    <Header @toggle-add-task="toggleAddTask" title="Daily Tasks" :showAddTask="showAddTask" />
+    <div v-if="showAddTask">
+      <AddTask @add-task="addTask" />
+    </div>
+    
     <Tasks 
     @toggle-reminder="toggleReminder"
     @delete-task="deleteTask" :tasks="tasks" />
@@ -12,19 +16,28 @@
 
 import Header from './components/Header'
 import Tasks from './components/Tasks'
+import AddTask from './components/AddTask'
 
 export default {
   name: 'App',
   components: {
     Header,
-    Tasks
+    Tasks,
+    AddTask
   },
   data () {
     return {
       tasks: [],
+      showAddTask: false,
     }
   },
   methods: {
+    toggleAddTask() {
+      this.showAddTask = !this.showAddTask
+    },
+    addTask(task) {
+      this.tasks = [...this.tasks, task]
+    },
     deleteTask(id) {
       if(confirm('Are you sure you want to delete this task?')) {
         this.tasks = this.tasks.filter((task) => task.id !== id)
@@ -32,29 +45,17 @@ export default {
     },
     toggleReminder(id) {
       this.tasks = this.tasks.map((task) => task.id === id ? {...task, reminder: !task.reminder} :task)
+    },
+    async fetchTasks() {
+      const res = await fetch('http://localhost:5000/tasks')
+
+      const data = await res.json()
+
+      return data
     }
   },
-  created() {
-    this.tasks = [
-      {
-        id: 1,
-        text: 'Car Service Appointment',
-        day: '24th of February - 13:30',
-        reminder: true,
-      },
-      {
-        id: 2,
-        text: 'Pick up Allan from Airport',
-        day: '31st of March - 14:25',
-        reminder: true,
-      },
-      {
-        id: 3,
-        text: 'Drinking session with the boys',
-        day: '24th of June - 21:00',
-        reminder: false,
-      }
-    ]
+  async created() {
+    this.tasks = await this.fetchTasks()
   }
 }
 
